@@ -7,9 +7,12 @@ export async function GET(req: NextRequest) {
     try {
         const { searchParams } = req.nextUrl
         // const { searchParams } = new URL(req.url)
-        const title = searchParams.get('title')?.slice(0, 70)
-        const description = searchParams.get('description')?.slice(0, 200)
-        const image = searchParams.get('image')
+        const encodedData = searchParams.get('data')!;
+        // const title = searchParams.get('title')?.slice(0, 70)
+        // const description = searchParams.get('description')?.slice(0, 200)
+        // const image = searchParams.get('image')
+        const decodedData = JSON.parse(Buffer.from(encodedData, 'base64').toString('utf-8'));
+        const { title, description, image } = decodedData;
         const fontPath = path.join(process.cwd(), 'assets', 'poppins.ttf')
         const fontData = await fs.readFile(fontPath)
 

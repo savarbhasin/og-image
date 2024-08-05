@@ -1,25 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import OGImageForm from "@/components/form"
-import Head from 'next/head';
 
-
-// export async function getOgImage(context:any){
-//   const data = context.query
-  // const response = await fetch(`/api/og?title=${encodeURIComponent(data.title.slice(0,50))}&description=${encodeURIComponent(data.description.slice(0,200))}${data.image && `&image=${encodeURIComponent(data.image)}`}`, {
-  //   method: 'GET',
-  //   headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //   });
-  //   const blob = await response.blob();
-  //   const url = URL.createObjectURL(blob);
-//     const d = {url,title:data.title,description:data.description};
-//     return {
-//       props: {
-//         d,
-//       },
-//     };
-//   }
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -38,15 +19,15 @@ export async function generateMetadata(
       title: 'OG Image Generator',
       description: 'Generate Open Graph images for your website'
     }
-  }
-    const response = await fetch(`https://og-image-snowy-nu.vercel.app/api/og?title=${encodeURIComponent(title.slice(0,50))}&description=${encodeURIComponent(description.slice(0,200))}${image && `&image=${encodeURIComponent(image)}`}`, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json'
-        },
-      });
+  } 
+
+
+    const data = { title, description, image };
+    const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
+    
+    const imageUrl = `https://og-image-snowy-nu.vercel.app/api/og?data=${encodedData}`;
       
-      const imageUrl = await response.text();
+      
 
   return {
     title,
@@ -63,6 +44,7 @@ export default function Home({searchParams}:Props) {
   return (
     <main>
       <OGImageForm initialData={searchParams}/>
+      
     </main>
   )
 }
