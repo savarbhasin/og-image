@@ -105,6 +105,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         {ogImage && (
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-2">Generated OG Image</h3>
+            <p className='text-black'>Image will be shown down here</p>
             {ogImage && ogImage !='' && <a href={ogImage} className='underline text-blue-500'>Click here for image link</a>}
             <img src={ogImage} alt="Generated OG Image" className="w-full h-auto" />
           </div>
