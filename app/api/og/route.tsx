@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "20px",
                         }}
                     >
-                        {title}
+                        {title.slice(0,75)}
                     </div>
                     <div
                         style={{
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "40px",
                         }}
                     >
-                        {description}
+                        {description.slice(0,100)}
                     </div>
                     <div
                         style={{
