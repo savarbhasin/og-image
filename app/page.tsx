@@ -26,7 +26,8 @@ export async function generateMetadata(
     const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
     
     const imageUrl = `https://og-image-snowy-nu.vercel.app/api/og?data=${encodedData}`;
-      
+    // const imageUrl = `http://localhost:3000/api/og?data=${encodedData}`;
+      // 
       
 
   return {

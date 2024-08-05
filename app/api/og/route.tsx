@@ -3,16 +3,28 @@ import { ImageResponse } from 'next/og';
 import { promises as fs } from 'fs'
 import path from 'path'
 
+const maxTitleLength = 40
+const maxDescriptionLength = 150
+
+const truncate = (text: string, maxLength: number) => {
+    if (text.length > maxLength) {
+        return text.slice(0, maxLength - 3) + '...'
+    }
+    return text
+}
+
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = req.nextUrl
         // const { searchParams } = new URL(req.url)
         const encodedData = searchParams.get('data')!;
+        
         // const title = searchParams.get('title')?.slice(0, 70)
         // const description = searchParams.get('description')?.slice(0, 200)
         // const image = searchParams.get('image')
         const decodedData = JSON.parse(Buffer.from(encodedData, 'base64').toString('utf-8'));
         const { title, description, image } = decodedData;
+        
         const fontPath = path.join(process.cwd(), 'assets', 'poppins.ttf')
         const fontData = await fs.readFile(fontPath)
 
@@ -75,7 +87,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "20px",
                         }}
                     >
-                        {title.slice(0,75)}...
+                        {truncate(title, maxTitleLength)}
                     </div>
                     <div
                         style={{
@@ -87,7 +99,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "40px",
                         }}
                     >
-                        {description.slice(0,200)}...
+                        {truncate(description, maxDescriptionLength)}
                     </div>
                     <div
                         style={{
@@ -161,7 +173,7 @@ export async function GET(req: NextRequest) {
                                 marginBottom: "20px",
                             }}
                         >
-                            {title}
+                            {truncate(title, maxTitleLength)}
                         </div>
                         <div
                             style={{
@@ -171,7 +183,7 @@ export async function GET(req: NextRequest) {
                                 maxWidth: "500px",
                             }}
                         >
-                            {description}
+                            {truncate(description, maxDescriptionLength)}
                         </div>
                     </div>
                     <div

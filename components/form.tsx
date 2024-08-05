@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { useToast } from './ui/use-toast'
+import toast from 'react-hot-toast'
 
 interface FormData {
   title: string
@@ -31,11 +33,13 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
     }
   })
 
+
   const [ogImage,setOgImage] = useState('')
   const router = useRouter()
  
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    toast.loading('Generating OG Image...');
     const {title,image, description} = data;
     const queryParams = new URLSearchParams({
         title: (title),
@@ -51,6 +55,9 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
     const encodedData = Buffer.from(JSON.stringify(dataToEncode)).toString('base64');
     
     setOgImage(`https://og-image-snowy-nu.vercel.app/api/og?data=${encodedData}`);
+    // setOgImage(`http://localhost:3000/api/og?data=${encodedData}`);
+    toast.dismiss();
+    toast.success('Generated OG Image');
   }
 
   return (
