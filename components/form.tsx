@@ -13,6 +13,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import Head from 'next/head';
+import { useRouter } from 'next/navigation';
 
 interface FormData {
     title: string;
@@ -27,17 +28,15 @@ const OGImageForm = () => {
     }});
 
     const [ogImage, setOgImage] = useState('');
-
+    const router = useRouter();
     const title = watch('title');
     const description = watch('description');
 
     useEffect(() => {
         if (ogImage) {
-            document.querySelector('meta[property="og:title"]')?.setAttribute('content',title);
-            document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
-            document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogImage);
+          router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(ogImage)}`)
         }
-    }, [ogImage]);
+      }, [ogImage, title, description, router])
 
     const onSubmit : SubmitHandler<FormData> = async (data, e?: BaseSyntheticEvent) => {
         e?.preventDefault();
@@ -54,11 +53,7 @@ const OGImageForm = () => {
 
     return (
         <Card className="w-full max-w-md mx-auto">
-            <Head>
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={ogImage} />
-            </Head>
+           
             <CardHeader>
                 <h2 className="text-2xl font-bold">Generate OG Image</h2>
             </CardHeader>

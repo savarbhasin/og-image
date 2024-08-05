@@ -1,15 +1,27 @@
-import OGImageForm from "@/components/form";
-import Head from "next/head";
+import type { Metadata } from 'next'
+import OGImageForm from "@/components/form"
+
+export const metadata: Metadata = {
+  title: 'OG Image Generator',
+  description: 'Generate Open Graph images for your web pages',
+  openGraph: {
+    title: 'OG Image Generator',
+    description: 'Generate Open Graph images for your web pages',
+    images: [
+      {
+        url: 'https://example.com/og-image.jpg', 
+        width: 1200,
+        height: 630,
+        alt: 'OG Image Generator',
+      },
+    ],
+  },
+}
 
 export default function Home() {
   return (
-    <>
-      <Head>
-                <meta property="og:title" content={'hi'} />
-                <meta property="og:description" content={'yo yo'} />
-                <meta property="og:image" content={'https://media.istockphoto.com/id/1316134499/photo/a-concept-image-of-a-magnifying-glass-on-blue-background-with-a-word-example-zoom-inside-the.jpg?s=612x612&w=0&k=20&c=sZM5HlZvHFYnzjrhaStRpex43URlxg6wwJXff3BE9VA='} />
-      </Head>
-      <OGImageForm/>
-    </>
-  );
+    <main>
+      <OGImageForm />
+    </main>
+  )
 }
