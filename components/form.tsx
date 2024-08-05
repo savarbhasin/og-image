@@ -38,12 +38,12 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const {title,image, description} = data;
     const queryParams = new URLSearchParams({
-        title: encodeURIComponent(title),
-        description: encodeURIComponent(description),
+        title: (title),
+        description: (description),
     });
     
     if (image) {
-        queryParams.append('image', encodeURIComponent(image));
+        queryParams.append('image', (image));
     }
     router.push(`?${queryParams.toString()}`);
 
@@ -98,7 +98,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         {ogImage && (
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-2">Generated OG Image</h3>
-            <a href={ogImage}>Image Link</a>
+            {ogImage && ogImage !='' && <a href={ogImage}>Image Link</a>}
             <img src={ogImage} alt="Generated OG Image" className="w-full h-auto" />
           </div>
         )}
