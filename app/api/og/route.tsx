@@ -5,9 +5,10 @@ import path from 'path'
 
 export async function GET(req: NextRequest) {
     try {
-        const { searchParams } = new URL(req.url)
-        const title = searchParams.get('title')?.slice(0, 70) || 'Default Title'
-        const description = searchParams.get('description')?.slice(0, 200) || 'Default Description'
+        const { searchParams } = req.nextUrl
+        // const { searchParams } = new URL(req.url)
+        const title = searchParams.get('title')?.slice(0, 70)
+        const description = searchParams.get('description')?.slice(0, 200)
         const image = searchParams.get('image')
         const fontPath = path.join(process.cwd(), 'assets', 'poppins.ttf')
         const fontData = await fs.readFile(fontPath)

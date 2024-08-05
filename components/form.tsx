@@ -139,17 +139,18 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
     }
   })
 
-  const [ogImage, setOgImage] = useState(initialData.image ?? '')
+  const [ogImage,setOgImage] = useState('')
   const router = useRouter()
-
+  const image = watch('image')
   const title = watch('title')
   const description = watch('description')
 
   useEffect(() => {
     if (ogImage) {
-      router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(ogImage)}`)
+        console.log(image)
+      router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}${image!='' && image && `&image=${encodeURIComponent(image)}`}`)
     }
-  }, [ogImage, title, description, router])
+  }, [ogImage, router])
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const response = await fetch(`/api/og?title=${encodeURIComponent(data.title.slice(0,50))}&description=${encodeURIComponent(data.description.slice(0,200))}${data.image ? `&image=${encodeURIComponent(data.image)}` : ''}`, {

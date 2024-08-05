@@ -39,15 +39,14 @@ export async function generateMetadata(
       description: 'Generate Open Graph images for your website'
     }
   }
-    const response = await fetch(`/api/og?title=${encodeURIComponent(title.slice(0,50))}&description=${encodeURIComponent(description.slice(0,200))}${image && `&image=${encodeURIComponent(image)}`}`, {
+    const response = await fetch(`http://https://og-image-snowy-nu.vercel.app/api/og?title=${encodeURIComponent(title.slice(0,50))}&description=${encodeURIComponent(description.slice(0,200))}${image && `&image=${encodeURIComponent(image)}`}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json'
         },
       });
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
+      
+      const imageUrl = await response.text();
 
   return {
     title,
@@ -55,7 +54,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      images: image ? [url] : [],
+      images: [imageUrl]
     },
   }
 }
