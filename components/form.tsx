@@ -54,7 +54,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto mt-10">
       <CardHeader>
         <h2 className="text-2xl font-bold">Generate OG Image</h2>
       </CardHeader>
@@ -98,7 +98,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         {ogImage && (
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-2">Generated OG Image</h3>
-            {ogImage && ogImage !='' && <a href={ogImage}>Image Link</a>}
+            {ogImage && ogImage !='' && <a href={ogImage} className='underline text-blue-500'>Click here for image link</a>}
             <img src={ogImage} alt="Generated OG Image" className="w-full h-auto" />
           </div>
         )}
