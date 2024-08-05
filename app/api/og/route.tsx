@@ -207,9 +207,7 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 
-export const config = {
-    runtime: "experimental-edge",
-  };
+export const runtime = "experimental-edge"
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
