@@ -53,7 +53,12 @@ const OGImageForm = () => {
 
     return (
         <Card className="w-full max-w-md mx-auto">
-           
+            <Head>
+                <title>Create a post</title>
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={description} />
+                {ogImage && <meta property="og:image" content={ogImage} />}
+            </Head>
             <CardHeader>
                 <h2 className="text-2xl font-bold">Generate OG Image</h2>
             </CardHeader>
