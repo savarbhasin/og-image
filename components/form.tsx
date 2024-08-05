@@ -18,12 +18,10 @@ interface FormData {
     title: string;
     description: string;
     image?: string;
-    template: string;
 }
 
 const OGImageForm = () => {
     const { register, handleSubmit, control, formState: { errors }, watch } = useForm<FormData>({defaultValues:{
-        template: 'template-1',
         description: 'Elevate your digital presence by using the og image generation built by savar bhasin. Use this tool to generate images efficiently.',
         title: 'Example OG Image',
     }});
@@ -35,7 +33,7 @@ const OGImageForm = () => {
 
     const onSubmit : SubmitHandler<FormData> = async (data, e?: BaseSyntheticEvent) => {
         e?.preventDefault();
-        const response = await fetch(`/api/og?title=${encodeURIComponent(data.title.slice(0,50))}&description=${encodeURIComponent(data.description.slice(0,200))}&template=${data.template}`, {
+        const response = await fetch(`/api/og?title=${encodeURIComponent(data.title.slice(0,50))}&description=${encodeURIComponent(data.description.slice(0,200))}${data.image && `&image=${encodeURIComponent(data.image)}`}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -89,29 +87,7 @@ const OGImageForm = () => {
                         />
                     </div>
 
-                    <div>
-                        <label htmlFor="template" className="block text-sm font-medium text-gray-700">Image Templates</label>
-                        <Controller
-                            name="template"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Template" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="template-1">Template 1</SelectItem>
-                                        <SelectItem value="template-2">Template 2</SelectItem>
-                                        <SelectItem value="template-3">Template 3</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            )}
-                            rules={{ required: "Template is required" }}
-                        />
-                        {errors.template && <p className="text-red-500 text-xs mt-1">{errors.template.message}</p>}
-                    </div>
-
+                    
                     <Button type="submit" className="w-full">Generate OG Image</Button>
                 </form>
             </CardContent>
