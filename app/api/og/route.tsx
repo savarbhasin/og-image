@@ -111,6 +111,101 @@ export async function GET(req: NextRequest) {
                 ],
             }
         )
+        return new ImageResponse(
+            (
+                <div
+                    style={{
+                        width: "1200px",
+                        height: "630px",
+                        position: "relative",
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "row",
+                        fontFamily: 'Gotile',
+                        background: "#0a0b1c",
+                    }}
+                >
+                    <div
+                        style={{
+                            width: "600px",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "20px",
+                            color: "#e0e0e0",
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginBottom: '20px',
+                            }}
+                        >
+                            <img src="https://medial.app/image/medial-purple-logo.png" alt="" width={50} height={30} />
+                            <p style={{ color: "#b19eff", fontSize: "24px", fontWeight: 700 }}>medial.com</p>
+                        </div>
+                        <div
+                            style={{
+                                textAlign: "center",
+                                fontSize: "48px",
+                                fontWeight: 700,
+                                maxWidth: "500px",
+                                marginBottom: "20px",
+                            }}
+                        >
+                            {title}
+                        </div>
+                        <div
+                            style={{
+                                textAlign: "center",
+                                fontSize: "24px",
+                                fontWeight: 400,
+                                maxWidth: "500px",
+                            }}
+                        >
+                            {description}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            width: "600px",
+                            height: "100%",
+                            overflow: "hidden",
+                            position: "relative",
+                            display:'flex'
+                        }}
+                    >
+                        <img
+                            src={image}
+                            alt="Right Side Image"
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                            }}
+                        />
+                    </div>
+                </div>
+            ),
+            {
+                width: 1200,
+                height: 630,
+                fonts: [
+                    {
+                        name: 'Gotile',
+                        data: fontData,
+                        style: 'normal',
+                    },
+                ],
+            }
+        )
     } catch (e: any) {
         console.error('OG Image generation error:', e)
         return new Response(`Failed to generate image: ${e.message}`, {
