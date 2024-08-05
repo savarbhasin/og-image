@@ -36,9 +36,11 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
 
   const [ogImage,setOgImage] = useState('')
   const router = useRouter()
- 
+  const [loading,setLoading] = useState(false)
+
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setLoading(true)
     toast.loading('Generating OG Image...');
     const {title,image, description} = data;
     const queryParams = new URLSearchParams({
@@ -56,9 +58,9 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
     
     setOgImage(`https://og-image-snowy-nu.vercel.app/api/og?data=${encodedData}`);
     // setOgImage(`http://localhost:3000/api/og?data=${encodedData}`);
-    toast.dismiss();
-    toast.success('Generated OG Image');
   }
+
+  
 
   return (
     <Card className="w-full max-w-md mx-auto mt-10">
@@ -102,12 +104,11 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         </form>
       </CardContent>
       <CardFooter>
-        {ogImage && (
+        {ogImage!='' &&  (
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-2">Generated OG Image</h3>
-            <p className='text-black'>Image will be shown down here</p>
-            {ogImage && ogImage !='' && <a href={ogImage} className='underline text-blue-500'>Click here for image link</a>}
-            <img src={ogImage} alt="Generated OG Image" className="w-full h-auto" />
+            {!loading && <a href={ogImage} className='underline text-blue-500'>Click here for image link</a>}
+            <img src={loading ?  'https://cdn.dribbble.com/users/2973561/screenshots/5757826/loading__.gif' :ogImage} onLoad={()=>{toast.dismiss(); setLoading(false)}} alt="Generated OG Image" className={`w-full h-auto`} />
           </div>
         )}
       </CardFooter>
