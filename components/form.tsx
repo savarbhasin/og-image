@@ -46,7 +46,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         queryParams.append('image', encodeURIComponent(image));
     }
     router.push(`?${queryParams.toString()}`);
-    
+
     const dataToEncode = { title, description, image };
     const encodedData = Buffer.from(JSON.stringify(dataToEncode)).toString('base64');
     
@@ -98,6 +98,7 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
         {ogImage && (
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-2">Generated OG Image</h3>
+            <a href={ogImage}>Image Link</a>
             <img src={ogImage} alt="Generated OG Image" className="w-full h-auto" />
           </div>
         )}
