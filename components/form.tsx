@@ -32,11 +32,11 @@ const OGImageForm = () => {
     const title = watch('title');
     const description = watch('description');
 
-    useEffect(() => {
-        if (ogImage) {
-          router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(ogImage)}`)
+    useEffect(()=>{
+        if(ogImage){
+            router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(ogImage)}`);   
         }
-      }, [ogImage, title, description, router])
+    },[ogImage])
 
     const onSubmit : SubmitHandler<FormData> = async (data, e?: BaseSyntheticEvent) => {
         e?.preventDefault();
