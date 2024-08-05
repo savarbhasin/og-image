@@ -37,7 +37,16 @@ const OGImageForm: React.FC<Props> = ({ initialData }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const {title,image, description} = data;
-    router.push(`?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}${image!='' && image && `&image=${encodeURIComponent(image)}`}`)
+    const queryParams = new URLSearchParams({
+        title: encodeURIComponent(title),
+        description: encodeURIComponent(description),
+    });
+    
+    if (image) {
+        queryParams.append('image', encodeURIComponent(image));
+    }
+    router.push(`?${queryParams.toString()}`);
+    
     const dataToEncode = { title, description, image };
     const encodedData = Buffer.from(JSON.stringify(dataToEncode)).toString('base64');
     
