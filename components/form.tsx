@@ -1,5 +1,5 @@
 'use client'
-import React, { BaseSyntheticEvent, useState } from 'react';
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,14 @@ const OGImageForm = () => {
 
     const title = watch('title');
     const description = watch('description');
+
+    useEffect(() => {
+        if (ogImage) {
+            document.querySelector('meta[property="og:title"]')?.setAttribute('content',title);
+            document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+            document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogImage);
+        }
+    }, [ogImage]);
 
     const onSubmit : SubmitHandler<FormData> = async (data, e?: BaseSyntheticEvent) => {
         e?.preventDefault();
