@@ -22,7 +22,11 @@ interface FormData {
 }
 
 const OGImageForm = () => {
-    const { register, handleSubmit, control, formState: { errors }, watch } = useForm<FormData>();
+    const { register, handleSubmit, control, formState: { errors }, watch } = useForm<FormData>({defaultValues:{
+        template: 'template-1',
+        description: 'Elevate your digital presence by using the og image generation built by savar bhasin. Use this tool to generate images efficiently.',
+        title: 'Example OG Image',
+    }});
 
     const [ogImage, setOgImage] = useState('');
 
