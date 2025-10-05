@@ -2,34 +2,46 @@ import { NextRequest } from "next/server"
 import { ImageResponse } from 'next/og';
 import { promises as fs } from 'fs'
 import path from 'path'
+import { validateOGData, truncateText, getBrandingConfig, decompressData } from '@/lib/og-utils'
 
 const maxTitleLength = 40
 const maxDescriptionLength = 150
 
-const truncate = (text: string, maxLength: number) => {
-    if (text.length > maxLength) {
-        return text.slice(0, maxLength - 3) + '...'
-    }
-    return text
-}
+// Runtime configuration
+export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = req.nextUrl
-        // const { searchParams } = new URL(req.url)
-        const encodedData = searchParams.get('data')!;
+        const encodedData = searchParams.get('data');
         
-        // const title = searchParams.get('title')?.slice(0, 70)
-        // const description = searchParams.get('description')?.slice(0, 200)
-        // const image = searchParams.get('image')
-        const decodedData = JSON.parse(Buffer.from(encodedData, 'base64').toString('utf-8'));
-        const { title, description, image } = decodedData;
+        // Validate input
+        if (!encodedData) {
+            return new Response('Missing data parameter', { status: 400 });
+        }
+
+        // Decode, decompress and validate data
+        let decodedData;
+        try {
+            decodedData = decompressData(encodedData);
+        } catch (error) {
+            return new Response('Invalid data encoding or compression', { status: 400 });
+        }
+
+        const validation = validateOGData(decodedData);
+        if (!validation.valid) {
+            return new Response(validation.error || 'Invalid data', { status: 400 });
+        }
+
+        const { title, description, image } = validation.data!;
+        const branding = getBrandingConfig();
         
         const fontPath = path.join(process.cwd(), 'assets', 'poppins.ttf')
         const fontData = await fs.readFile(fontPath)
 
-        if(!image)
-            return new ImageResponse(
+        // Generate image response based on whether custom image is provided
+        const imageResponse = !image
+            ? new ImageResponse(
             (
                 <div
                     style={{
@@ -71,11 +83,11 @@ export async function GET(req: NextRequest) {
                             alignItems: 'center',
                             gap: '20px'
                         }}>
-                        <img src="https://medial.app/image/medial-purple-logo.png" alt="" width={60} height={40} />
+                        {branding.logo && <img src={branding.logo} alt="" width={60} height={40} />}
                         <p style={{
-                            color: "#b19eff",
+                            color: branding.color,
                             transform: "translateY(5px)"
-                        }}>medial.com</p>
+                        }}>{branding.name}</p>
                     </div>
                     <div
                         style={{
@@ -87,7 +99,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "20px",
                         }}
                     >
-                        {truncate(title, maxTitleLength)}
+                        {truncateText(title, maxTitleLength)}
                     </div>
                     <div
                         style={{
@@ -99,7 +111,7 @@ export async function GET(req: NextRequest) {
                             marginBottom: "40px",
                         }}
                     >
-                        {truncate(description, maxDescriptionLength)}
+                        {truncateText(description, maxDescriptionLength)}
                     </div>
                     <div
                         style={{
@@ -111,7 +123,7 @@ export async function GET(req: NextRequest) {
                             fontWeight: 700,
                         }}
                     >
-                        Use Medial Now
+                        Learn More
                     </div>
                 </div>
             ),
@@ -127,7 +139,7 @@ export async function GET(req: NextRequest) {
                 ],
             }
         )
-        return new ImageResponse(
+            : new ImageResponse(
             (
                 <div
                     style={{
@@ -161,19 +173,19 @@ export async function GET(req: NextRequest) {
                                 marginBottom: '20px',
                             }}
                         >
-                            <img src="https://medial.app/image/medial-purple-logo.png" alt="" width={50} height={30} />
-                            <p style={{ color: "#b19eff", fontSize: "24px", fontWeight: 700 }}>medial.com</p>
+                            {branding.logo && <img src={branding.logo} alt="" width={50} height={30} />}
+                            <p style={{ color: branding.color, fontSize: "24px", fontWeight: 700 }}>{branding.name}</p>
                         </div>
                         <div
                             style={{
                                 textAlign: "center",
                                 fontSize: "48px",
                                 fontWeight: 700,
-                                maxWidth: "500px",
-                                marginBottom: "20px",
-                            }}
+                            maxWidth: "500px",
+                            marginBottom: "20px",
+                        }}
                         >
-                            {truncate(title, maxTitleLength)}
+                            {truncateText(title, maxTitleLength)}
                         </div>
                         <div
                             style={{
@@ -183,7 +195,7 @@ export async function GET(req: NextRequest) {
                                 maxWidth: "500px",
                             }}
                         >
-                            {truncate(description, maxDescriptionLength)}
+                            {truncateText(description, maxDescriptionLength)}
                         </div>
                     </div>
                     <div
@@ -221,7 +233,18 @@ export async function GET(req: NextRequest) {
                     },
                 ],
             }
-        )
+        );
+
+        // Add caching headers for better performance
+        const headers = new Headers();
+        headers.set('Content-Type', 'image/png');
+        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+        
+        // Return the image with proper headers
+        return new Response(await imageResponse.arrayBuffer(), {
+            headers,
+            status: 200,
+        });
     } catch (e: any) {
         console.error('OG Image generation error:', e)
         return new Response(`Failed to generate image: ${e.message}`, {
